@@ -2,6 +2,12 @@ import numpy as np
 import pandas as pd
 import seaborn as sns
 import matplotlib.pyplot as plt
+from sklearn.linear_model import LinearRegression
+from sklearn.model_selection import train_test_split, cross_validate, cross_val_score, KFold
+from sklearn.metrics import r2_score
+from statsmodels.regression.linear_model import OLS
+from statsmodels.tools import add_constant
+
 
 def drop_na_columns(dataframe, list_of_columns, threshold):
     """Drop columns where number of null entries in a column exceeds a user-set percentage threshold"""
@@ -92,3 +98,75 @@ def CLT_violinplots(dataframe, x_axis, y_axis, sample_size = 50, num_simulations
     sns.violinplot(x = '{} Sample Means'.format(x_axis), y = y_axis, data = df, palette="Set3", order = ordering)
     plt.xticks(rotation = 45)
     plt.show()
+    
+def sklearn_linreg_with_CV(X, y, test_size, n_splits):
+    "Generates R2 score"
+    
+    X_train, X_test, y_train, y_test = train_test_split(X, y, test_size = test_size, random_state = 1)
+    linreg = LinearRegression().fit(X_train, y_train)
+    linreg_score = round(linreg.score(X_test, y_test),2)
+
+    cross_validation = KFold(n_splits = n_splits, shuffle = True, random_state = 1)
+    linreg_cv = LinearRegression()
+    cv_score = round(np.mean(cross_val_score(linreg_cv, X, y, scoring = 'r2', cv=cross_validation)),2)
+
+    return linreg_score, cv_score
+
+
+def statsmodel_regression(X_train, X_test, y_train, y_test):
+    regr = OLS(y_train, add_constant(X_train)).fit()
+    predictions = regr.predict(X_test)
+    r2_test = round(r2_score(y_test, predictions),2)
+    return r2_test, regr
+
+import statsmodels.api as sm
+
+def stepwise_selection(X, y, 
+                       initial_list=[], 
+                       threshold_in=0.01, 
+                       threshold_out = 0.05, 
+                       verbose=True):
+    """ Perform a forward-backward feature selection 
+    based on p-value from statsmodels.api.OLS
+    Arguments:
+        X - pandas.DataFrame with candidate features
+        y - list-like with the target
+        initial_list - list of features to start with (column names of X)
+        threshold_in - include a feature if its p-value < threshold_in
+        threshold_out - exclude a feature if its p-value > threshold_out
+        verbose - whether to print the sequence of inclusions and exclusions
+    Returns: list of selected features 
+    Always set threshold_in < threshold_out to avoid infinite looping.
+    See https://en.wikipedia.org/wiki/Stepwise_regression for the details
+    """
+    included = list(initial_list)
+    while True:
+        changed=False
+        # forward step
+        excluded = list(set(X.columns)-set(included))
+        new_pval = pd.Series(index=excluded)
+        for new_column in excluded:
+            model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included+[new_column]]))).fit()
+            new_pval[new_column] = model.pvalues[new_column]
+        best_pval = new_pval.min()
+        if best_pval < threshold_in:
+            best_feature = new_pval.idxmin()
+            included.append(best_feature)
+            changed=True
+            if verbose:
+                print('Add  {:30} with p-value {:.6}'.format(best_feature, best_pval))
+
+        # backward step
+        model = sm.OLS(y, sm.add_constant(pd.DataFrame(X[included]))).fit()
+        # use all coefs except intercept
+        pvalues = model.pvalues.iloc[1:]
+        worst_pval = pvalues.max() # null if pvalues is empty
+        if worst_pval > threshold_out:
+            changed=True
+            worst_feature = pvalues.argmax()
+            included.remove(worst_feature)
+            if verbose:
+                print('Drop {:30} with p-value {:.6}'.format(worst_feature, worst_pval))
+        if not changed:
+            break
+    return included
