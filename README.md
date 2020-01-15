@@ -72,7 +72,7 @@ Using GridSearch CV to identify the best alpha hyperparameter / penalizer. We th
 ### Model Selection
 Looking purely by R2 scores, model complexity and optimum number of features, we have decided to go for the Stepwise model. However we will still need to check if the model fits the regression assumptions. First let check for multicollinearity using the VIF metric.
 
-![Repo List](summary_png/VIF.png)
+![Repo List](summary_png/VIF.png | width = 100| height = 100)
 
 
 ++
