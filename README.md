@@ -74,6 +74,8 @@ Looking purely by R2 scores, model complexity and optimum number of features, we
 
 ![Repo List](summary_png/VIF.png)
 
+
+++
     - Paste map
     - Paste state table suggestion
     - Paste VIF, assumption normality,  
