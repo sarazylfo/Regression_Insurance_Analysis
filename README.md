@@ -32,15 +32,28 @@ Given the sheer size of the features involved and for better interpretation for 
     - Recursive Feature Elimination: sklearn's function of greedily choosing
     - Lasso: use GridSearch to find the best penalizing parameter 'alpha' for the Lasso algo. We will then select features that have not been shrinked to 0
 
-
 Once we get all the features selected by each method above, we pass those into Statsmodel's OLS function. Subsequently, we will select our most prefferred model by comparing their R2 scores, AIC (model complexity) and also consider the number of features included, which is the primary consideration here.
 
 Post model selection, we will then check if the chosen model satisfies the assumptions of a regression; no multicollinearity between selected features, homosceasticity and normality of errors. In the end, we shall evaluate the model if it fits the purpose for our final user.
+
+![Repo List](summary_png/summary_models.png)
 
     - Paste summary table
     - Paste map
     - Paste state table suggestion
     - Paste VIF, assumption normality,  
+
+### Method Evaluations
+
+One of the pitfalls of the above methods is that we might have potentially ignored other useful features that might be of use to our final user. 
+
+Coupled with the above, the previously contemplated model might include various highly correlated features, violating the assumptions of a regression model. As such, let's try out best to find a middle ground by using by:
+
+- dropping features with no or low variance. These features typically do not add much predictive value in a model
+- dropping features which are highly correlated
+
+Let's start of by dropping features with no or low variance. We can utilize Sklearn's 'variance_threshold' tool to solve this.
+
 
 ### Conclusion, Limitations and Future Work
 To conclude, it is important to emphasize that whilst we have chosen the model above, there are many other methods out there which may result in a better model. That said, the above model should at least provide our end user with the crucial indicators for estimating life expectancy.
