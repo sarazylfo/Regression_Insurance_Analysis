@@ -61,6 +61,19 @@ Using sklearn's RFECV function returns the best number of features to use accord
 
 This looks slightly better than the filter method however the number of features still remains an issue here.
 
+#### Stepwise ['Excerpt from the Learn.co']
+*'In stepwise selection, you start with an empty model (which only includes the intercept), and each time, the variable that has an associated parameter estimate with the lowest p-value is added to the model (forward step). After adding each new variable in the model, the algorithm will look at the p-values of all the other parameter estimates which were added to the model previously, and remove them if the p-value exceeds a certain value (backward step). The algorithm stops when no variables can be added or removed given the threshold values.'*
+
+With this model, we achieved a fairly reasonable R2 and a manageable number of features. 
+
+#### Lasso
+Using GridSearch CV to identify the best alpha hyperparameter / penalizer. We then took the non-zero coefficients from the model and fitted that into an OLS model which resulted in outcomes similar to the above stepwise model.
+
+### Model Selection
+Looking purely by R2 scores, model complexity and optimum number of features, we have decided to go for the Stepwise model. However we will still need to check if the model fits the regression assumptions. First let check for multicollinearity using the VIF metric.
+
+![Repo List](summary_png/VIF.png)
+
     - Paste map
     - Paste state table suggestion
     - Paste VIF, assumption normality,  
