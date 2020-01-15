@@ -36,23 +36,38 @@ Once we get all the features selected by each method above, we pass those into S
 
 Post model selection, we will then check if the chosen model satisfies the assumptions of a regression; no multicollinearity between selected features, homosceasticity and normality of errors. In the end, we shall evaluate the model if it fits the purpose for our final user.
 
+### Method Evaluations
+
 ![Repo List](summary_png/summary_models.png)
 
-    - Paste summary table
+#### Baseline
+For the baseline model, we used all 60 features which managed to generate train R2 scores in the 72 - 75% region. However the large number of features coupled with the high non-signficant (p-values) is not very appealing, especially for our end user.
+
+#### Naive Selection
+The Naive Selection method uses features with high correlation (set at 0.65) with the 'life expectancy' variable. Whilst the technique might be useful for reducing the number of features, one of the pitfalls of this is that the method might ignore other useful features.
+
+#### Filter Method
+Coupled with the above, the previously contemplated models might include various highly correlated features, violating the assumptions of a regression model. As such, we tried using a middle approach by:
+    
+    - dropping features with no or low variance. These features typically do not add much predictive value in a model
+    - dropping features which are highly correlated
+
+This method however still results in a high number of features / non-significant features.
+
+#### Recursive Feature Elimination
+Using sklearn's RFECV function returns the best number of features to use according to the R2 scoring criteria. With this we obtained:
+
+![Repo List](summary_png/RFECV.png)
+
+This looks slightly better than the filter method however the number of features still remains an issue here.
+
     - Paste map
     - Paste state table suggestion
     - Paste VIF, assumption normality,  
 
-### Method Evaluations
 
-One of the pitfalls of the above methods is that we might have potentially ignored other useful features that might be of use to our final user. 
 
-Coupled with the above, the previously contemplated model might include various highly correlated features, violating the assumptions of a regression model. As such, let's try out best to find a middle ground by using by:
 
-- dropping features with no or low variance. These features typically do not add much predictive value in a model
-- dropping features which are highly correlated
-
-Let's start of by dropping features with no or low variance. We can utilize Sklearn's 'variance_threshold' tool to solve this.
 
 
 ### Conclusion, Limitations and Future Work
