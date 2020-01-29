@@ -103,9 +103,35 @@ Summary map:
 ### Conclusion, Limitations and Future Work
 To conclude, it is important to emphasize that whilst we have chosen the model above, there are many other methods out there which may result in a better model. That said, the above model should at least provide our end user with the crucial indicators for estimating life expectancy.
 
-For future work, we will look to explore:
+Our main factors for increasing life expectancy are boiled down to:
+Median Household Income
+Mammography Screening
+College Education
 
-    - investigate performance of forward / backward selection, Ridge regression, interactions and polynomials
+Our main factors for decreasing life expectancy:
+Adult Smoking 
+Physical Inactivity 
+Air Pollution
+Diabetes
+
+We identified states with low current coverage of insurance, but who's populations satisfy the feature detailed above to increase life expectancy and those were:
+Colorado
+Nevado
+Idaho 
+Iowa
+Conneticut. 
+
+
+
+For future work, we will look to explore:
+    - investigate performance of forward / backward selection, Ridge regression, interactions and   
+       polynomials
     - user other models apart from OLS, ie RF, CART, etc
     - investigate indirect correlations between features
- 
+    
+    
+ A further population we would like to explore are millenials. 
+44% of millennials overestimate the cost of life insurance by up to 5 times.
+89% of millennial prioritise benefits over pay rises.
+83% of millennials would change their job for better benefits, of which family benefits is in their top three requirements.
+Consider selling group insurance to companies who retain a high % of millennial talent to expose the demographic to life insurance.
